@@ -19,21 +19,27 @@ public class ElevatorSubsystem implements SubsystemBase {
     private PIDController controller;
     Constraints.ElevatorConstraints constraints = new Constraints.ElevatorConstraints();
 
+
     public static int target = 0;
+
+    public void periodic(){
+        elevatorPosition = -((Robot.LSi.getCurrentPosition() + Robot.LSii.getCurrentPosition())/10);
+    }
 
     public ElevatorSubsystem(RobotHardware robot){
         this.Robot = robot;
     }
     public void init() {
+        elevatorPosition = (Robot.LSi.getCurrentPosition() + Robot.LSii.getCurrentPosition());
         controller = new PIDController(constraints.kp, constraints.ki, constraints.kd);
 
-        int elevatorPosition = Robot.LSi.getCurrentPosition() + Robot.LSii.getCurrentPosition();
+        double pid = controller.calculate(elevatorPosition, target);
+        double ff = Math.cos(Math.toRadians(target))  * constraints.kf;
 
+        pidPower = pid + ff;
 
     }
-    public void periodic(){
-        elevatorPosition = -((Robot.LSi.getCurrentPosition() + Robot.LSii.getCurrentPosition())/10);
-    }
+
 
     public void manualControl(float upButton, float downButton) {
         Robot.LSi.setPower(upButton - downButton);

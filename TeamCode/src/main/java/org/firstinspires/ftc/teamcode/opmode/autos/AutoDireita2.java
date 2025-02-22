@@ -80,7 +80,7 @@ public class AutoDireita2 extends LinearOpMode {
         Robot.clawServo.setPosition(0.15);
         yawC.setPosition(0);
         arm.setLowPosition();
-        elevator.pidTarget(40);
+        elevator.pidTarget(200);
 
 
         /*waitForStart();
